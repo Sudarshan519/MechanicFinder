@@ -28,18 +28,20 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: FutureBuilder(
-          future: Hive.openBox('users'),
-          builder: (_, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (!snapshot.hasError)
-                MyHomePage();
-              else
-                return Text(snapshot.error.toString());
-            }
+
+          home: FutureBuilder(
+        future: Hive.openBox('users'),
+        builder: (_, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (!snapshot.hasError)
+              return LoginPage();
+            else
+              return Text(snapshot.error.toString());
+          } else
             return Center(child: CircularProgressIndicator());
-          },
-        ));
+        },
+      ),
+    );
   }
 
   @override
@@ -50,14 +52,5 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return LoginPage();
-  }
-}
+
