@@ -1,3 +1,4 @@
+import 'package:MechanicFinder/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -57,17 +58,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: <Widget>[
-          TextFormField(),
-          FlatButton(
-            onPressed: () {},
-            child: Text('Submit'),
-          )
-        ],
-      ),
-    );
+    return LoginPage();
   }
 }
