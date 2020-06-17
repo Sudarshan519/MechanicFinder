@@ -1,14 +1,15 @@
 import 'package:MechanicFinder/auth/login.dart';
 import 'package:flutter/material.dart';
 
+
 enum Page { dashboard, manage }
 
-class AdminPage extends StatefulWidget {
+class AdminSite extends StatefulWidget {
   @override
-  createState() => _AdminPageState();
+  _AdminSiteState createState() => _AdminSiteState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class _AdminSiteState extends State<AdminSite> {
   Page _selectedPage = Page.dashboard;
   MaterialColor active = Colors.red;
   MaterialColor notActive = Colors.grey;
@@ -26,14 +27,12 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white.withOpacity(0),
         title: Row(
           children: <Widget>[
             Expanded(
-              flex: 1,
                 child: FlatButton.icon(
                     onPressed: () {
                       setState(() {
@@ -45,7 +44,7 @@ class _AdminPageState extends State<AdminPage> {
                       color:
                           _selectedPage == Page.dashboard ? active : notActive,
                     ),
-                    label: Text('Dashb..',overflow: TextOverflow.clip,))),
+                    label: Text('Dashboard'))),
             Expanded(
                 child: FlatButton.icon(
                     onPressed: () {
@@ -84,8 +83,9 @@ class _AdminPageState extends State<AdminPage> {
         FlatButton(
             onPressed: () {
               if (_categoryFormkey.currentState.validate())
-              //_shopService.createShop(shopController.text);
-              {}
+                //_shopService.createShop(shopController.text);
+                {}
+             
             },
             child: Text('Add')),
         FlatButton(
@@ -114,8 +114,8 @@ class _AdminPageState extends State<AdminPage> {
         FlatButton(
           onPressed: () {
             if (_brandFormkey.currentState.validate()) {
-              // _mechanicService.createShop(mechanicController.text);
-              {}
+             // _mechanicService.createShop(mechanicController.text);
+             {}
             }
           },
           child: Text("add"),
@@ -304,15 +304,15 @@ class _AdminPageState extends State<AdminPage> {
             ),
             Divider(),
             InkWell(
-              onTap: () {
+              onTap: (){
                 // AuthService().signOut();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ));
               },
-              child: Column(
+                          child: Column(
                 children: <Widget>[
                   Icon(Icons.lock_open),
                   Text('Log out'),

@@ -1,5 +1,12 @@
+import 'package:MechanicFinder/admin/adminPage.dart';
 import 'package:MechanicFinder/auth/login.dart';
+import 'package:MechanicFinder/business/businessHomePage.dart';
+import 'package:MechanicFinder/database/dbhelper.dart';
+import 'package:MechanicFinder/models/user.dart';
+import 'package:MechanicFinder/user/userHomePage.dart';
+import 'package:MechanicFinder/widgets/textStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -9,233 +16,232 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   String _selectedItem = 'user';
 
-  bool _anchorToBottom = false;
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  // FirebaseUser firebaseUser;
   final _formKey = GlobalKey<FormState>();
-  // DatabaseReference databaseRef;
-  // Usertype usertype;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  User user;
+
+  String usertype;
+
+  void showSnackBar() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text('value'),
+      backgroundColor: Colors.white,
+    ));
+  }
+
   @override
   void initState() {
     super.initState();
-
-    // final FirebaseDatabase database = FirebaseDatabase();
-    // usertype = Usertype('', 'admin');
-    // databaseRef = database.reference().child('users');
+    usertype = 'user';
   }
 
   @override
   void dispose() {
     super.dispose();
-    // _messagesSubscription.cancel();
-    // _counterSubscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          SizedBox(height: 25),
-          Text(
-            'SignUp',
-            // style: appStyle,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Material(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(40),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          hintText: '  username',
-                          border: InputBorder.none),
-                      controller: usernameController,
-                      validator: (v) {
-                        if (v.isEmpty) return 'username cannot be empty';
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Material(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(40),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email),
-                          hintText: '           email',
-                          border: InputBorder.none),
-                      controller: emailController,
-                      validator: (v) {
-                        if (v.isEmpty) return '   email cannot be empty';
-                        if (v.length < 5) return 'enter valid email';
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Material(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(40),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
-                          hintText: '          password',
-                          border: InputBorder.none),
-                      validator: (v) {
-                        if (v.isEmpty) return 'password cannot be empty';
-                        if (v.length < 8)
-                          return 'password shoult be greater than 8 char empty';
-                        return null;
-                      },
-                      controller: passwordController,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: DropdownButton(
-                      value: _selectedItem,
-                      onChanged: (v) {
-                        setState(() {
-                          _selectedItem = v;
-                        });
-                      },
-                      items: [
-                        DropdownMenuItem(
-                          child: Text(
-                            'Admin',
-                            // style: heading,
-                          ),
-                          value: 'admin',
-                        ),
-                        DropdownMenuItem(
-                          child: Text(
-                            'user',
-                            // style: heading,
-                          ),
-                          value: 'user',
-                        ),
-                        DropdownMenuItem(
-                          child: Text(
-                            'Business',
-                            // style: heading,
-                          ),
-                          value: 'business',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  RaisedButton(
-                      color: Colors.transparent,
-                      child: Container(
-                          width: double.infinity,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Center(child: Text('submit'))),
-                      onPressed: () {
-                        //   FirebaseAuth.instance
-                        //       .createUserWithEmailAndPassword(
-                        //           email: emailController.text,
-                        //           password: passwordController.text)
-                        //       .then((value) {
-                        //     setState(() {
-                        //       firebaseUser = value.user;
-                        //     });
-                        //   });
-                        //   usertype.usertype = _selectedItem;
-                        //   usertype.id = firebaseUser.uid;
-                        //   setUsertype(firebaseUser);
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height * .9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              color: Colors.lightBlue,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 30,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                            hintText: '  username',
+                            border: InputBorder.none),
+                        controller: usernameController,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+                            hintText: '  email',
+                            border: InputBorder.none),
+                        controller: emailController,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            hintText: '  password',
+                            border: InputBorder.none),
+                        controller: passwordController,
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          dropdownColor: Colors.grey,
 
-                        //   // }
-                        // },
-                      }),
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return LoginPage();
-                      }));
-                    },
-                    child: Text('Already have account\tSignIn'),
-                  )
-                ],
+                          underline: Text(''),
+                          elevation: 0,
+                          //isExpanded: true,
+                          value: _selectedItem,
+                          onChanged: (v) {
+                            setState(() {
+                              _selectedItem = v;
+
+                              print(v);
+                              usertype = v;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    Icons.person,
+                                    color: Colors.black54,
+                                  ),
+                                  Text(
+                                    ' Admin',
+                                    style: heading.copyWith(
+                                        fontSize: 15, color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                              value: 'admin',
+                            ),
+                            DropdownMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    Icons.person,
+                                    color: Colors.black54,
+                                  ),
+                                  Text(
+                                    '  User',
+                                    style: heading.copyWith(
+                                        fontSize: 15, color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                              value: 'user',
+                            ),
+                            DropdownMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    Icons.person,
+                                    color: Colors.black54,
+                                  ),
+                                  Text(
+                                    '  Business',
+                                    style: heading.copyWith(
+                                        fontSize: 15, color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                              value: 'business',
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          print(usernameController.text);
+                          print(passwordController.text);
+                          print(emailController.text);
+                          print(usertype);
+                          if (usernameController.text != null) addUser();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
+                            if (usertype == 'admin')
+                              return AdminPage();
+                            else if (usertype == 'user')
+                              return UserHomePage();
+                            else
+                              return BusinessHomePage();
+                          }));
+                        },
+                        child: Container(
+                            width: double.infinity,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(30)),
+                            child: Center(child: Text('SignUp'))),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => LoginPage()));
+                        },
+                        child: Text('Already have account\tSignIn'),
+                      ),
+                      Container(
+                          height: 100,
+                          child: ListView.builder(
+                            itemCount: Hive.box('users').length,
+                            itemBuilder: (_, index) {
+                              final useri =
+                                  Hive.box('users').getAt(index) as User;
+                              return ListTile(
+                                  leading: Text(useri.usertype),
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      // Hive.box('users').clear();
+                                    },
+                                    icon: Icon(Icons.delete),
+                                  ));
+                            },
+                          ))
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-          // ListView(children: <Widget>[
-          //  for(int i=0;i<100;i++)
-
-          ListTile(
-            leading: Checkbox(
-              onChanged: (bool value) {
-                setState(() {
-                  _anchorToBottom = value;
-                });
-              },
-              value: _anchorToBottom,
-            ),
-            title: const Text('Anchor to bottom'),
-          ),
-          // Flexible(
-          //   child: FirebaseAnimatedList(
-          //     key: ValueKey<bool>(_anchorToBottom),
-          //     query: _messagesRef,
-          //     reverse: _anchorToBottom,
-          //     sort: _anchorToBottom
-          //         ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-          //         : null,
-          //     itemBuilder: (BuildContext context, DataSnapshot snapshot,
-          //         Animation<double> animation, int index) {
-          //       return SizeTransition(
-          //         sizeFactor: animation,
-          //         child: ListTile(
-          //           trailing: IconButton(
-          //             onPressed: () =>
-          //                 _messagesRef.child(snapshot.key).remove(),
-          //             icon: Icon(Icons.delete),
-          //           ),
-          //           title: Text(
-          //             "$index: ${snapshot.value.toString()} ",
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
-        ],
+        ),
       ),
     );
   }
 
-  // setUsertype(User user) async {
-  //   //databaseRef.push().set(usertype.toJson());
-  //   if (usertype.usertype == 'firebaseUser')
-  //     Navigator.push(context, MaterialPageRoute(builder: (_) {
-  //       return MainScreen(firebaseUser);
-  //     }));
-  //   else if (usertype.usertype == 'business')
-  //     Navigator.push(context, MaterialPageRoute(builder: (_) {
-  //       return BusinessHomePage(firebaseUser);
-  //     }));
-  //   else
-  //     Navigator.push(context, MaterialPageRoute(builder: (_) {
-  //       return AdminHomePage(firebaseUser);
-  //     }));
-  // }
+  void getUser(index) {
+    Hive.box('users').length;
+  }
+
+  void addUser() {
+    int key = DateTime.now().millisecondsSinceEpoch;
+    final users = User(key.toString(), usernameController.text, 'images/b.jpg',
+        usertype, emailController.text, passwordController.text);
+    dbHelper.addUser(users);
+  }
 }

@@ -19,7 +19,12 @@ class User {
   @HiveField(4)
   String usertype;
 
-  User(this.id, this.username, this.image, this.usertype);
+  @HiveField(5)
+  String email;
+
+  @HiveField(6)
+  String password;
+  User(this.id, this.username, this.image, this.usertype, this.email,this.password);
 }
 
 // factory User.fromJson(Map<String, dynamic> json) {

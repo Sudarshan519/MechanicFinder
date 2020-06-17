@@ -21,6 +21,8 @@ class UserAdapter extends TypeAdapter<User> {
       fields[1] as String,
       fields[2] as String,
       fields[4] as String,
+      fields[5] as String,
+      fields[6] as String,
     )..vechile = fields[3] as String;
   }
 
@@ -37,6 +39,10 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.vechile)
       ..writeByte(4)
-      ..write(obj.usertype);
+      ..write(obj.usertype)
+      ..writeByte(5)
+      ..write(obj.email)
+      ..writeByte(6)
+      ..write(obj.password);
   }
 }
