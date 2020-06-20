@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
              // hintStyle: TextStyle(color: Colors.grey, fontSize: 18)),
         ),
       ),
-    );
+    ));
   }
 
   @override
